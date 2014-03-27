@@ -17,6 +17,7 @@ function ssh(host, port, username, password){
 
 ssh.prototype = {
   constructor: ssh,
+  //初始化，建立连接
   init: function (){
     var self = this;
     if(self.host && self.username){
@@ -47,6 +48,7 @@ ssh.prototype = {
       throw "缺少参数~！";
     }
   },
+  //执行远程命令
   exec: function (command, cb){
     var self = this;
     if(self.status === 1){
@@ -77,6 +79,10 @@ ssh.prototype = {
         self.exec(command, cb);
       }, 1000);
     }
+  },
+  //关闭远程连接
+  close: function (){
+    this.connection.end();
   }
 };
 

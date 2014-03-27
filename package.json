@@ -2,22 +2,22 @@
   "name": "grunt-shelltask",
   "description": "grunt exec shell task",
   "version": "0.1.0",
-  "homepage": "https://github.com/jiangwei/shellTask",
+  "homepage": "https://github.com/RK-WJW/grunt-shelltask",
   "author": {
     "name": "RK-WJW",
     "email": "javawjw@163.com"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/jiangwei/shellTask.git"
+    "url": "git://github.com/RK-WJW/grunt-shelltask.git"
   },
   "bugs": {
-    "url": "https://github.com/jiangwei/shellTask/issues"
+    "url": "https://github.com/RK-WJW/grunt-shelltask/issues"
   },
   "licenses": [
     {
       "type": "MIT",
-      "url": "https://github.com/jiangwei/shellTask/blob/master/LICENSE-MIT"
+      "url": "https://github.com/RK-WJW/grunt-shelltask/blob/master/LICENSE-MIT"
     }
   ],
   "engines": {
