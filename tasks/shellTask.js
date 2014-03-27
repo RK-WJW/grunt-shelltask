@@ -7,14 +7,16 @@
  */
 
 'use strict';
+var path = require("path");
+var async = require('async');
+var ssh = require('./lib/ssh.js');
+var localCmd = require('./lib/localCmd.js');
+var logger = console;
+var sshArray = [];
 
 module.exports = function(grunt) {
-
   // Please see the Grunt documentation for more information regarding task
   // creation: http://gruntjs.com/creating-tasks
-  var path = require("path");
-  var async = require('async');
-
   grunt.registerMultiTask('shellTask', 'grunt exec shell task', function() {
     // Merge task-specific and/or target-specific options with these defaults.
     var options = this.options({
@@ -24,16 +26,23 @@ module.exports = function(grunt) {
     // console.log(this);
 
     var task = this.data.task;
-    var str = '';
-    for(var i = 0; i < task.length; i++){
-      var item = task[i];
+    async.eachSeries(task, function (item, callback){
       if(item.remote && options[item.remote]){
-        str += "cd " + options[item.remote].workspace + "\n";
+        var remote = item.remote;
+        var sshConn = sshArray[remote] || new ssh(options[remote]);
+        if(sshConn && sshConn.status === 1){
+          sshArray[remote] = sshConn;
+          sshConn.exec(item.command, callback);
+        }else{
+          logger.error("ssh error~!");
+          callback("ssh error~!");
+        }
+      }else{
+        localCmd.exec(item.command, callback);
       }
-      str += item.command + "\n";
-      str += "--------------\n"
-    }
-    grunt.log.writeln(str);
+    }, function (err, data){
+      
+    });
   });
 
 };

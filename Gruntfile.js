@@ -33,42 +33,23 @@ module.exports = function(grunt) {
       options: {
         localWorkspace: "E://workspace/",
         "rs": {
-          ip: "123.23.0.1",
-          username: "wjw",
-          password: "123",
-          workspace: "/wjw"
+          host: "10.210.227.110",
+          username: "wangqiang1",
+          password: "123456",
+          workspace: "/data1/nginx/htdocs/online"
         }
       },
       default_task: {
         options: {
-          "rs1": {
-            ip: "111.22.33.1",
-            username: "wjw111",
-            password: "111",
-            workspace: "/wjw111"  
-          }
+          
         },
         task: [
           {
-            command: 'hello default_task~!',
-            remote: 'rs1'
-          }
-        ]
-      },
-      my_task: {
-        options: {
-          localWorkspace: "/home",
-          "rs": {
-            ip: "123.23.0.1",
-            username: "wjw_",
-            password: "123",
-            workspace: "/wjw_"
-          }
-        },
-        task: [
+            command: 'pwd',
+            remote: 'rs'
+          },
           {
-            command: "hello my_task~!",
-            remote: "rs"
+            command: 'cd'
           }
         ]
       }
