@@ -31,12 +31,12 @@ module.exports = function(grunt) {
     // Configuration to be run (and then tested).
     shellTask: {
       options: {
-        localWorkspace: "E://workspace/",
+        localWorkPath: "E://workspace/",
         "rs": {
           host: "10.210.227.110",
           username: "wangqiang1",
           password: "123456",
-          workspace: "/data1/nginx/htdocs/online"
+          workPath: "/data1/nginx/htdocs/online"
         }
       },
       default_task: {
@@ -50,6 +50,35 @@ module.exports = function(grunt) {
           },
           {
             command: 'cd'
+          },
+          {
+            command: 'svn info blog7',
+            remote: 'rs'
+          },
+          {
+            command: 'ls -l',
+            remote: 'rs'
+          }
+        ]
+      },
+      my_task: {
+        options: {
+          localWorkPath: "E:/workspace/study/grunt/grunt-shelltask",
+        },
+        task: [
+          {
+            command: 'pwd',
+            remote: 'rs'
+          },
+          {
+            command: 'cd'
+          },
+          {
+            command: 'dir'
+          },
+          {
+            command: 'ls -l',
+            remote: 'rs'
           }
         ]
       }

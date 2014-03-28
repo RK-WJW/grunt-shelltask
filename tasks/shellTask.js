@@ -1,6 +1,5 @@
 /*
  * grunt-shellTask
- * https://github.com/jiangwei/shellTask
  *
  * Copyright (c) 2014 RK-WJW
  * Licensed under the MIT license.
@@ -15,34 +14,47 @@ var logger = console;
 var sshArray = [];
 
 module.exports = function(grunt) {
-  // Please see the Grunt documentation for more information regarding task
-  // creation: http://gruntjs.com/creating-tasks
   grunt.registerMultiTask('shellTask', 'grunt exec shell task', function() {
-    // Merge task-specific and/or target-specific options with these defaults.
+    var task = this.data.task;
+    var done = this.async();
     var options = this.options({
         log: path.join(__dirname, "../log/task.log")
     });
-    // console.log(options);
-    // console.log(this);
 
-    var task = this.data.task;
     async.eachSeries(task, function (item, callback){
-      if(item.remote && options[item.remote]){
-        var remote = item.remote;
-        var sshConn = sshArray[remote] || new ssh(options[remote]);
-        if(sshConn && sshConn.status === 1){
+      var remote = item.remote;
+      var workPath = options.localWorkPath;
+      var command = item.command;
+      var _callback = function (err, data){
+        logger.info(err||data);
+        callback(err, data);
+      }
+      if(remote && options[remote]){
+        var remoteObj = options[remote];
+        var sshConn = sshArray[remote] || new ssh(remoteObj);
+        workPath = remoteObj.workPath;
+        if(sshConn){
           sshArray[remote] = sshConn;
-          sshConn.exec(item.command, callback);
+          logger.info(sshConn.host + ": " + item.command);
+          if(workPath){
+            command = "cd " + workPath + "; " + command;
+          }
+          sshConn.exec(command, _callback);
         }else{
-          logger.error("ssh error~!");
-          callback("ssh error~!");
+          _callback("ssh object error~!");
         }
       }else{
-        localCmd.exec(item.command, callback);
+        logger.info("local: " + item.command);
+        localCmd.exec(command, workPath, _callback);
       }
     }, function (err, data){
-      
+        if(err){
+          throw grunt.util.error(err);
+        }else{
+          logger.info(arguments);
+        }
+        done();
     });
-  });
 
+  });
 };
