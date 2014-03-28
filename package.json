@@ -26,6 +26,11 @@
   "scripts": {
     "test": "grunt test"
   },
+  "dependencies": {
+    "async":"*",
+    "iconv-lite": "*",
+    "ssh2": "*"
+  },
   "devDependencies": {
     "grunt-contrib-jshint": "~0.6.0",
     "grunt-contrib-clean": "~0.4.0",

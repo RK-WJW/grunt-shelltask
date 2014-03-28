@@ -27,63 +27,83 @@ grunt.initConfig({
   shellTask: {
     options: {
       // Task-specific options go here.
+      localWorkPath: '', 
+      "remoteName": {
+        host: '',
+        port: 22,
+        username: '',
+        password: '',
+        workPath: ''
+      }
     },
-    your_target: {
+    my_task: {
       // Target-specific file lists and/or options go here.
+      options:{
+
+      },
+      task: [
+        {
+          command: 'pwd',
+          remote: 'remoteName'
+        },{
+          command: 'cd'
+        }
+      ]
     },
+    my_task2: {
+      //...
+    }
   },
 });
 ```
 
 ### Options
 
-#### options.separator
+#### options.localWorkPath
 Type: `String`
-Default value: `',  '`
+Default value: 
 
-A string value that is used to do something with whatever.
+#### options.remoteName (*remoteName user-defined*)
+Type: `Object`
+Default value: 
 
-#### options.punctuation
-Type: `String`
-Default value: `'.'`
-
-A string value that is used to do something else with whatever else.
 
 ### Usage Examples
 
 #### Default Options
-In this example, the default options are used to do something with whatever. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result would be `Testing, 1 2 3.`
-
-```js
-grunt.initConfig({
-  shellTask: {
-    options: {},
-    files: {
-      'dest/default_options': ['src/testing', 'src/123'],
-    },
-  },
-});
-```
-
-#### Custom Options
-In this example, custom options are used to do something else with whatever else. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result in this case would be `Testing: 1 2 3 !!!`
+In this example
 
 ```js
 grunt.initConfig({
   shellTask: {
     options: {
-      separator: ': ',
-      punctuation: ' !!!',
+      localWorkPath: 'E:/workspace/', 
+      "rs": {
+        host: '123.1.1.10',
+        port: 22,
+        username: 'test',
+        password: '123456',
+        workPath: '/home/test/'
+      }
     },
-    files: {
-      'dest/default_options': ['src/testing', 'src/123'],
-    },
-  },
+    my_task: {
+      task: [
+        {
+          command: 'pwd',
+          remote: 'rs'
+        },{
+          command: 'cd'
+        }
+      ]
+    }
+  }
 });
+// result
+// 123.1.1.10: pwd
+// /home/test/
+// local: cd
+// E:/workspace/
 ```
-
-## Contributing
-In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
 _(Nothing yet)_
