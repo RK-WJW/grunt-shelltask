@@ -50,14 +50,6 @@ module.exports = function(grunt) {
           },
           {
             command: 'cd'
-          },
-          {
-            command: 'svn info blog7',
-            remote: 'rs'
-          },
-          {
-            command: 'ls -l',
-            remote: 'rs'
           }
         ]
       },

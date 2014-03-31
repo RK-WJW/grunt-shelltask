@@ -45,20 +45,16 @@ ssh.prototype = {
     if(self.host && self.username){
       var c = self.connection = new Connection();
       c.on("ready", function (){
-        // logger.info("Connection ready~! ");
         self.status = 1;
       });
       c.on('error', function(err) {
-        // logger.error('Connection error~! ' + err);
         self.status = -2;
         self.STATUS_MESSAGE["S-2"].error = err;
       });
       c.on('end', function() {
-        // logger.log('Connection end~! ');
         self.status = 2;
       });
       c.on('close', function(had_error) {
-          // logger.log('Connection close~! ');
           self.status = 2;
       });
       c.connect({
@@ -74,32 +70,33 @@ ssh.prototype = {
   //执行远程命令
   exec: function (command, cb){
     var self = this;
+    var args = Array.prototype.slice.call(arguments,0);
     switch(self.status){
       case 0:
         setTimeout(function(){
-          self.exec(command, cb);
+          self.exec.apply(self, args);
         }, 1000);
         break;
       case 1: 
-        _exec(command, cb);
+        _exec();
         break;
       default:
         cb(self.STATUS_MESSAGE["S" + self.status] || "未知错误");
     }
 
-    function _exec(command, cb){
+    function _exec(){
+      var result = '';
       self.connection.exec(command, function (err, stream){
         if(err){
           cb(err);
         }else{
-          var dataStr = '';
-          var errStr = '';
+          var isStderr = false;
           stream.on('data', function(data, extended) {
-            extended === 'stderr' ? errStr += data : dataStr += data;
+            result += data;
+            isStderr = (extended === 'stderr');
           });
           stream.on('end', function() {
-            // logger.info('Stream: end~!');
-            cb(errStr || null, dataStr);
+            cb((isStderr ? result : null), result);
           });
           /*
           stream.on('exit', function(code, signal) {
@@ -108,7 +105,7 @@ ssh.prototype = {
           stream.on('close', function() {
             // logger.info('Stream: close~!');
           });
-          */    
+          */ 
         }
       });
     }

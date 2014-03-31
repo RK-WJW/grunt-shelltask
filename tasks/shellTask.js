@@ -21,37 +21,36 @@ module.exports = function(grunt) {
         log: path.join(__dirname, "../log/task.log")
     });
 
-    async.eachSeries(task, function (item, callback){
+    async.mapSeries(task, function (item, callback){
       var remote = item.remote;
       var workPath = options.localWorkPath;
       var command = item.command;
-      var _callback = function (err, data){
-        logger.info(err||data);
-        callback(err, data);
-      }
+
       if(remote && options[remote]){
         var remoteObj = options[remote];
         var sshConn = sshArray[remote] || new ssh(remoteObj);
         workPath = remoteObj.workPath;
         if(sshConn){
           sshArray[remote] = sshConn;
-          logger.info(sshConn.host + ": " + item.command);
           if(workPath){
             command = "cd " + workPath + "; " + command;
           }
-          sshConn.exec(command, _callback);
+          sshConn.exec(command, callback);
         }else{
-          _callback("ssh object error~!");
+          callback("ssh object error~!");
         }
       }else{
-        logger.info("local: " + item.command);
-        localCmd.exec(command, workPath, _callback);
+        localCmd.exec(command, workPath, callback);
       }
     }, function (err, data){
         if(err){
           throw grunt.util.error(err);
         }else{
-          logger.info(arguments);
+          for(var i = 0; i < task.length; i++){
+            var item = task[i];
+            var str = (item.remote ? item.remote : "LOCAL") + ": " + item.command + "\n" + data[i];
+            logger.info(str);
+          }
         }
         done();
     });
