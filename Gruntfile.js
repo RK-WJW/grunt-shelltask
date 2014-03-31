@@ -1,6 +1,6 @@
 /*
- * grunt-shellTask
- * https://github.com/jiangwei/shellTask
+ * grunt-shelltask
+ * https://github.com/jiangwei/shelltask
  *
  * Copyright (c) 2014 RK-WJW
  * Licensed under the MIT license.
@@ -29,7 +29,7 @@ module.exports = function(grunt) {
     },
 
     // Configuration to be run (and then tested).
-    shellTask: {
+    shelltask: {
       options: {
         localWorkPath: "E://workspace/",
         "rs": {
@@ -93,7 +93,7 @@ module.exports = function(grunt) {
 
   // Whenever the "test" task is run, first clean the "tmp" dir, then run this
   // plugin's task(s), then test the result.
-  grunt.registerTask('test', ['clean', 'shellTask']);
+  grunt.registerTask('test', ['clean', 'shelltask']);
 
   // By default, lint and run all tests.
   // grunt.registerTask('default', ['jshint', 'test']);

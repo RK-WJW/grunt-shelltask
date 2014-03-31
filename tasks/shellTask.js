@@ -1,5 +1,5 @@
 /*
- * grunt-shellTask
+ * grunt-shelltask
  *
  * Copyright (c) 2014 RK-WJW
  * Licensed under the MIT license.
@@ -14,7 +14,7 @@ var logger = console;
 var sshArray = [];
 
 module.exports = function(grunt) {
-  grunt.registerMultiTask('shellTask', 'grunt exec shell task', function() {
+  grunt.registerMultiTask('shelltask', 'grunt exec shell task', function() {
     var task = this.data.task;
     var done = this.async();
     var options = this.options({
