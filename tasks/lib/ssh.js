@@ -1,6 +1,6 @@
 /**
- * @description 
- * @author
+ * @description 远程连接服务并执行命令
+ * @author RK
  */
 
 var Connection = require('ssh2');

@@ -1,7 +1,7 @@
 /*
  * grunt-shelltask
  *
- * Copyright (c) 2014 RK-WJW
+ * Copyright (c) 2014 RK
  * Licensed under the MIT license.
  */
 
@@ -18,15 +18,31 @@ module.exports = function(grunt) {
     var task = this.data.task;
     var done = this.async();
     var options = this.options({
-        log: path.join(__dirname, "../log/task.log")
+        // log: path.join(__dirname, "../log/task.log")
     });
 
+    //按顺序执行
     async.mapSeries(task, function (item, callback){
       var remote = item.remote;
       var workPath = options.localWorkPath;
       var command = item.command;
+      var _cb = (function (item){
+        return function (err, data){
+          item.ret = err || data;
+          logger.info(err || data);
+          callback(err,data);
+        };
+      })(item);
+
+      if(typeof command === 'function'){
+        command = command.apply({
+          "options":options,
+          "task": task
+        });
+      }
 
       if(remote && options[remote]){
+        logger.info("REMOTE " + remote + ": " + command);
         var remoteObj = options[remote];
         var sshConn = sshArray[remote] || new ssh(remoteObj);
         workPath = remoteObj.workPath;
@@ -35,22 +51,17 @@ module.exports = function(grunt) {
           if(workPath){
             command = "cd " + workPath + "; " + command;
           }
-          sshConn.exec(command, callback);
+          sshConn.exec(command, _cb);
         }else{
-          callback("ssh object error~!");
+          _cb("ssh object error~!");
         }
       }else{
-        localCmd.exec(command, workPath, callback);
+        logger.info("LOCAL: " + command);
+        localCmd.exec(command, workPath, _cb);
       }
     }, function (err, data){
         if(err){
           throw grunt.util.error(err);
-        }else{
-          for(var i = 0; i < task.length; i++){
-            var item = task[i];
-            var str = (item.remote ? item.remote : "LOCAL") + ": " + item.command + "\n" + data[i];
-            logger.info(str);
-          }
         }
         done();
     });
