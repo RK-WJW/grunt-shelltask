@@ -17,7 +17,7 @@ Once the plugin has been installed, it may be enabled inside your Gruntfile with
 grunt.loadNpmTasks('grunt-shelltask');
 ```
 
-##win系统需要修改cmd窗口编码和字体，不然可能会出现乱码。## 
+#win系统需要修改cmd窗口编码和字体，不然可能会出现乱码。#   
 设置方法：    
 1、在cmd窗口输入执行：chcp 65001     
 2、右击cmd窗口左上角，选择属性-->字体-->Lucida Console 然后确定    
