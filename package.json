@@ -1,7 +1,7 @@
 {
   "name": "grunt-shelltask",
   "description": "grunt exec shell task",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "homepage": "https://github.com/RK-WJW/grunt-shelltask",
   "author": {
     "name": "RK-WJW",
