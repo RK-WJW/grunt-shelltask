@@ -37,12 +37,13 @@ cmd.prototype = {
           self.status = -1;
           self.STATUS_MESSAGE["S-1"].error = err || stderr;
         }else{
-          if(/936/.test(stdout)){
-            self.chcp = 936; 
-          }
+          var arr = stdout.match(/\d+/) || [];
+          self.chcp = parseInt(arr[0]); 
           self.status = 1;
         }
       });
+    }else{
+      self.status = 1;
     }
   },
 	exec: function (command, cwd, cb){
@@ -74,7 +75,7 @@ cmd.prototype = {
         if(error){
           cb(error);
         }else{
-           var result = stdout || stderr;
+          var result = stdout || stderr;
           if(self.chcp === 936){
             result = iconv.decode(result, 'GBK');
           }
