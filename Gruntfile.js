@@ -17,8 +17,8 @@ module.exports = function(grunt) {
       options: {
         // localWorkPath: "E://workspace/",
         "rs": {
-          host: "10.210.227.110",
-          username: "wangqiang1",
+          host: "10.110.120.130",
+          username: "testname",
           password: "123456",
           workPath: "/data1/nginx/htdocs/online"
         }
@@ -29,8 +29,7 @@ module.exports = function(grunt) {
         },
         task: [
           {
-            command: 'pwd',
-            remote: 'rs'
+            command: 'cd'
           },
           {
             command: "node test.js"
@@ -41,13 +40,16 @@ module.exports = function(grunt) {
             }
           },
           {
+            command: "exit"
+          },
+          {
             command: "dir"
           }
         ]
       }/*,
       my_task: {
         options: {
-          localWorkPath: "E:/workspace/study/grunt/grunt-shelltask",
+          localWorkPath: "E:/workspace/grunt/grunt-shelltask",
         },
         task: [
           {
