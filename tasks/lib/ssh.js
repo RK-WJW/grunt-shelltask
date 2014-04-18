@@ -92,7 +92,7 @@ ssh.prototype = {
                 } else {
                     stream.on('data', function (data, extended) {
                         result += data;
-                        logger.info(data);
+                        logger.info(data + '');
                     });
                     stream.on('end', function () {
                         cb(null, result);
