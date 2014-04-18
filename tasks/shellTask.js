@@ -18,7 +18,7 @@ module.exports = function (grunt) {
         var task = this.data.task;
         var done = this.async();
         var options = this.options({
-                // log: path.join(__dirname, "../log/task.log")
+                logger: logger
             });
         //按顺序执行
         async.mapSeries(task, function (item, callback) {
@@ -28,7 +28,6 @@ module.exports = function (grunt) {
             var _cb = (function (item) {
                 return function (err, data) {
                     item.ret = err || data;
-                    data ? logger.info(data) : '';
                     callback(err, data);
                 };
             })(item);
@@ -42,6 +41,11 @@ module.exports = function (grunt) {
             //命令为exit时终止任务
             if(command === "exit"){
                 _cb("exit");
+                return;
+            }
+            //命令为skip时跳过任务
+            if(command === "skip"){
+                _cb(null, "skip");
                 return;
             }
             
