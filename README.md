@@ -1,6 +1,6 @@
 # grunt-shelltask
 
-> grunt exec shell task
+> grunt插件，配置实现自动执行本地或远程的多命令任务处理。
 
 ## Getting Started
 This plugin requires Grunt `*`
@@ -17,9 +17,9 @@ Once the plugin has been installed, it may be enabled inside your Gruntfile with
 grunt.loadNpmTasks('grunt-shelltask');
 ```
 
-**win系统需要修改cmd窗口编码和字体，不然可能会出现乱码。**      
+**win系统如果出现有乱码情况，可尝试修改cmd窗口编码和字体，具体如下**      
 设置方法：    
-1、在cmd窗口输入执行：chcp 65001     
+1、在cmd窗口输入执行：chcp 65001
 2、右击cmd窗口左上角，选择属性-->字体-->Lucida Console 然后确定    
 
 
@@ -54,15 +54,26 @@ grunt.initConfig({
         },{
           command: 'cd'
         },{
-          command: function (){
+          command: 'skip' //custom command：Continue to the next
+        },{
+          command: 'exit' //custom command：No longer continue to execute down
+        },{
+          command: function (prev){
             /*
-            this 当前任务数组对象，item：{
-              command: '', //命令
-              remote: '', //远程名
-              ret: '' //执行命令的结果
+            this {
+              options: '', 
+              task: [],
+              getResult: Function,//by id, by index
+              prev: task[n-1]
             }
+            prev == this.prev
             */
             return "echo " + this.task[1].ret;
+          },
+          after: function (data){
+            //data：command result string
+            //this same as above
+            return data;
           }
         }
       ]
@@ -104,29 +115,43 @@ grunt.initConfig({
       }
     },
     my_task: {
+      options:{
+      
+      },
       task: [
         {
           command: 'pwd',
           remote: 'rs'
         },{
-          command: 'cd'
+          id: 'cdTest',
+          command: 'cd',
+          after: function (data){
+            return {path: data};
+          }
         },{
-          command: function (){
-            var _cmd = "echo " + this.task[0].ret + " ; " + this.task[1].ret; 
+          command: function (prev){
+            var _cmd = "echo " + prev.ret.path; 
             return _cmd;
           }
+        },{
+          command: function (){
+            var ret = this.getResult("cdTest");//get result by task id
+            var ret1 = this.getResult(1);//get result by task index
+            var ret2 = this.getResult();//default 0
+            var options = this.options; //options
+            console.log(ret.path === ret1.path);//true
+            console.log(ret2);// /home/test/
+            return "skip";
+          }
+        },{
+          command: "exit"
+        },{
+          command: "cd"//not execute
         }
       ]
     }
   }
 });
-// result
-// REMOTE rs: pwd
-// /home/test/
-// LOCAL: cd
-// E:/workspace/
-// LOCAL: echo /home/test/ ; E:/workspace/
-// /home/test/ ; E:/workspace/
 ```
 
 ## Release History
