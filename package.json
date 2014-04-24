@@ -27,9 +27,7 @@
     "test": "grunt test"
   },
   "dependencies": {
-    "async":"*",
-    "iconv-lite": "*",
-    "ssh2": "*"
+    "sheller":"*"
   },
   "devDependencies": {
     "grunt": "*"

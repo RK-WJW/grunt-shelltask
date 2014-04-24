@@ -6,7 +6,7 @@
  */
 
 'use strict';
-var sheller = require('./lib/sheller.js');
+var sheller = require('sheller');
 var logger = sheller.logger;
 
 module.exports = function (grunt) {
@@ -14,7 +14,7 @@ module.exports = function (grunt) {
         var task = this.data.task;
         var done = this.async();
         var options = this.options({
-                logger: logger
+                // logger: logger
             });
         sheller.execTask({
             "options": options,
