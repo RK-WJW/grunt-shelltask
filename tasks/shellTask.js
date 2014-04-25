@@ -16,7 +16,7 @@ module.exports = function (grunt) {
         var options = this.options({
                 // logger: logger
             });
-        sheller.execTask({
+        sheller.execSingleTask({
             "options": options,
             "task": task
         }, function (err, data){
