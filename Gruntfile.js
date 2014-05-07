@@ -9,28 +9,36 @@
 'use strict';
 
 module.exports = function (grunt) {
-
     // Project configuration.
     grunt.initConfig({
         // Configuration to be run (and then tested).
         shelltask : {
+            //shelltask the top of the parameter
+            //shelltask 顶端参数
             options : {
-                // localWorkPath: "E://workspace/",
+                //localWorkPath: Local command execution path
+                //localWorkPath: 本地命令执行的路径
+                localWorkPath: "E://workspace/",
+                //"rs"为自定义值，用于配置远程机信息
                 "rs" : {
                     host : "10.110.120.130",
                     username : "testname",
                     password : "123456",
+                    //在远程机上执行命令时的当前环境路径
                     workPath : "/data1/nginx/htdocs/online"
                 }
             },
             default_task : {
-                options : {},
+                options : {
+                    //覆盖合并顶端参数
+                },
                 task : [{
                         command : 'cd'
                     }, {
-                        id: "test1",
+                        id: "test1",//可选 标识当前配置的这条命令
                         command : "node test.js"
                     }, {
+                        //command 支持方法Function方式，需要返回命令的字符串
                         command : function (prev) {
                             var self = this;
                             /*
@@ -47,6 +55,7 @@ module.exports = function (grunt) {
                             console.info("cd result: " + self.getResult());//default 0
                             return "echo " + this.task[1].ret;
                         },
+                        //after 可选 Function 对命令得到的结果做再处理，返回处理后的结果
                         after : function (data) {
                             //this 同上
                             return {
@@ -59,10 +68,10 @@ module.exports = function (grunt) {
                         command: function (prev){
                             var ret = prev.ret;
                             console.info(ret.status);//1
-                            return "skip"
+                            return "skip";//自定义命令 跳过当前命令
                         }
                     },{
-                        command : "exit"
+                        command : "exit"//自定义命令 退出任务，不再往下执行
                     }, {
                         command : "dir"
                     }
@@ -77,28 +86,17 @@ module.exports = function (grunt) {
                     }, {
                         command : 'exit'
                     }, {
-                        command : 'ls -l',
+                        command : 'pwd',
                         remote : 'rs'
                     }
                 ]
             }
         }
-        /*,
-
-        // Unit tests.
-        nodeunit: {
-        tests: ['test/*_test.js'],
-        }*/
-
     });
 
     // Actually load this plugin's task(s).
     grunt.loadTasks('tasks');
-    // Whenever the "test" task is run, first clean the "tmp" dir, then run this
-    // plugin's task(s), then test the result.
+    
     grunt.registerTask('test', ['shelltask']);
-
-    // By default, lint and run all tests.
-    // grunt.registerTask('default', ['jshint', 'test']);
 
 };
